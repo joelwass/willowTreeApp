@@ -15,6 +15,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     private let reuseIdentifier = "PhotoCell"
     private let sectionInsets = UIEdgeInsets(top: -50.0, left: 10.0, bottom: 10.0, right: 10.0)
     private var photos = [UIImage]()
+    private var activityIndicator:UIActivityIndicatorView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +32,11 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
+        
+        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        self.view.addSubview(activityIndicator!)
+        activityIndicator!.frame = self.view.bounds
+        activityIndicator!.startAnimating()
         
         self.loadPhotos(self.getSixRandomValues())
         print(API.sharedInstance().returnedData![0]["url"])
@@ -63,6 +69,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 }
                 
                 if (i == randomNums.count - 1) {
+                    self?.activityIndicator!.removeFromSuperview()
                     self?.collectionView.reloadData()
                 }
             }
