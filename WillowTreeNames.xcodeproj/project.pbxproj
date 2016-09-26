@@ -20,6 +20,8 @@
 		EE764E451D935A4D00C8795D /* NormalModeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE764E441D935A4D00C8795D /* NormalModeVC.swift */; };
 		EE764E471D935A5800C8795D /* ReverseModeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE764E461D935A5800C8795D /* ReverseModeVC.swift */; };
 		EE764E4A1D9366EC00C8795D /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE764E491D9366EC00C8795D /* PhotoCell.swift */; };
+		EEF45D8D1D99E243005F21B2 /* NameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF45D8C1D99E243005F21B2 /* NameCell.swift */; };
+		EEF45D901D99E3EB005F21B2 /* HelperMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF45D8F1D99E3EB005F21B2 /* HelperMethods.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +61,8 @@
 		EE764E441D935A4D00C8795D /* NormalModeVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NormalModeVC.swift; sourceTree = "<group>"; };
 		EE764E461D935A5800C8795D /* ReverseModeVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReverseModeVC.swift; sourceTree = "<group>"; };
 		EE764E491D9366EC00C8795D /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
+		EEF45D8C1D99E243005F21B2 /* NameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NameCell.swift; sourceTree = "<group>"; };
+		EEF45D8F1D99E3EB005F21B2 /* HelperMethods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperMethods.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +113,7 @@
 		EE764E0A1D93071300C8795D /* WillowTreeNames */ = {
 			isa = PBXGroup;
 			children = (
+				EEF45D8E1D99E3E2005F21B2 /* Helper */,
 				EE764E481D9366D200C8795D /* Cells */,
 				EE764E431D93096600C8795D /* ViewControllers */,
 				EE764E401D93089900C8795D /* 3rdParty */,
@@ -171,8 +176,17 @@
 			isa = PBXGroup;
 			children = (
 				EE764E491D9366EC00C8795D /* PhotoCell.swift */,
+				EEF45D8C1D99E243005F21B2 /* NameCell.swift */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		EEF45D8E1D99E3E2005F21B2 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				EEF45D8F1D99E3EB005F21B2 /* HelperMethods.swift */,
+			);
+			name = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,7 +320,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEF45D8D1D99E243005F21B2 /* NameCell.swift in Sources */,
 				EE764E451D935A4D00C8795D /* NormalModeVC.swift in Sources */,
+				EEF45D901D99E3EB005F21B2 /* HelperMethods.swift in Sources */,
 				EE764E471D935A5800C8795D /* ReverseModeVC.swift in Sources */,
 				EE764E0E1D93071300C8795D /* ViewController.swift in Sources */,
 				EE764E0C1D93071300C8795D /* AppDelegate.swift in Sources */,
@@ -538,6 +554,7 @@
 				EE764E351D93071400C8795D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EE764E361D93071400C8795D /* Build configuration list for PBXNativeTarget "WillowTreeNamesTests" */ = {
 			isa = XCConfigurationList;
@@ -546,6 +563,7 @@
 				EE764E381D93071400C8795D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EE764E391D93071400C8795D /* Build configuration list for PBXNativeTarget "WillowTreeNamesUITests" */ = {
 			isa = XCConfigurationList;
@@ -554,6 +572,7 @@
 				EE764E3B1D93071400C8795D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

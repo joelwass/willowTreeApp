@@ -40,25 +40,12 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         activityIndicator!.frame = self.view.bounds
         activityIndicator!.startAnimating()
         
-        self.loadPhotos(self.getSixRandomValues())
-    }
-    
-    func getSixRandomValues() -> [Int] {
-        
-        var nums = Array(0...API.sharedInstance().returnedData!.count-1)
-        var randoms = [Int]()
-        
-        for _ in 1...6 {
-            let index = Int(arc4random_uniform(UInt32(nums.count)))
-            randoms.append(nums[index])
-            nums.removeAtIndex(index)
-        }
-        
-        return randoms
+        self.loadPhotos(HelperMethods.sharedInstance().getSixRandomValues())
     }
     
     func loadPhotos(randomNums: [Int]) {
         
+        self.photos.removeAll()
         correctIndex = Int(arc4random_uniform(UInt32(5)))
         
         dispatch_async(dispatch_get_main_queue(), { [weak self] in
@@ -88,15 +75,13 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         return 1
     }
 
-    func collectionView(collectionView: UICollectionView,
-                                 numberOfItemsInSection section: Int) -> Int {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 6
     }
 
-    func collectionView(collectionView: UICollectionView,
-                                 cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoCell
-        cell.backgroundColor = .blackColor()
+        cell.backgroundColor = UIColor.clearColor()
         
         if photos.indices.contains(indexPath.row) {
             cell.imageView.image = photos[indexPath.row]
@@ -105,9 +90,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                               sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let paddingSpace = sectionInsets.left * 7
         let availableWidth = view.frame.width - paddingSpace
         let widthPerItem = availableWidth / 2
@@ -121,16 +104,23 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         return sectionInsets
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
         return sectionInsets.left
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
         if (indexPath.row == correctIndex) {
-            
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
                 let alert = UIAlertController(title: "Correct!", message: "", preferredStyle: .Alert)
-                let OKAction = UIAlertAction(title: "Next Employee", style: .Default, handler: nil)
+                let OKAction = UIAlertAction(title: "Next Employee", style: .Default, handler: { _ in
+                    self!.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+                    self!.view.addSubview(self!.activityIndicator!)
+                    self!.activityIndicator!.frame = self!.view.bounds
+                    self!.activityIndicator!.startAnimating()
+                    
+                    self!.loadPhotos(HelperMethods.sharedInstance().getSixRandomValues())
+                })
                 alert.addAction(OKAction)
                 self?.presentViewController(alert, animated: true, completion: nil)
             })
