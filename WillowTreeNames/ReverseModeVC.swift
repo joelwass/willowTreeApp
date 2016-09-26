@@ -20,6 +20,7 @@ class ReverseModeVC: UIViewController {
         super.viewWillAppear(true)
         
         self.navigationController?.navigationBarHidden = false
+        self.navigationController?.navigationBar.topItem?.title = "Reverse Mode"
     }
 
     override func didReceiveMemoryWarning() {

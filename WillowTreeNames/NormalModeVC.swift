@@ -16,6 +16,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     private let sectionInsets = UIEdgeInsets(top: -50.0, left: 10.0, bottom: 10.0, right: 10.0)
     private var photos = [UIImage]()
     private var activityIndicator:UIActivityIndicatorView?
+    private var correctIndex:Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         super.viewWillAppear(true)
         
         self.navigationController?.navigationBarHidden = false
+        self.navigationController?.navigationBar.topItem?.title = "Normal Mode"
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -39,7 +41,6 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         activityIndicator!.startAnimating()
         
         self.loadPhotos(self.getSixRandomValues())
-        print(API.sharedInstance().returnedData![0]["url"])
     }
     
     func getSixRandomValues() -> [Int] {
@@ -58,6 +59,8 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     func loadPhotos(randomNums: [Int]) {
         
+        correctIndex = Int(arc4random_uniform(UInt32(5)))
+        
         dispatch_async(dispatch_get_main_queue(), { [weak self] in
             for i in Range(0..<randomNums.count) {
             // dispatch async so we can animate each as they load
@@ -66,6 +69,11 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     if let data = NSData(contentsOfURL: url) {
                         self?.photos.append(UIImage(data: data)!)
                     }
+                }
+                
+                if (i == self?.correctIndex) {
+                    let solutionName = API.sharedInstance().returnedData![randomNums[i]]["name"].string!
+                    self?.questionLabel.text = "Which of the following is \(solutionName)?"
                 }
                 
                 if (i == randomNums.count - 1) {
@@ -115,6 +123,27 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
         return sectionInsets.left
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        if (indexPath.row == correctIndex) {
+            
+            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                let alert = UIAlertController(title: "Correct!", message: "", preferredStyle: .Alert)
+                let OKAction = UIAlertAction(title: "Next Employee", style: .Default, handler: nil)
+                alert.addAction(OKAction)
+                self?.presentViewController(alert, animated: true, completion: nil)
+            })
+        } else {
+            let cell = self.collectionView.cellForItemAtIndexPath(indexPath)
+            cell?.backgroundColor = UIColor.redColor()
+            let animationDuration = 0.5
+            
+            // perform animation to flash image red
+            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+                cell?.backgroundColor = UIColor.blueColor()
+            })
+        }
     }
 
     override func didReceiveMemoryWarning() {

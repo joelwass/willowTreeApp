@@ -46,7 +46,6 @@ class ViewController: UIViewController {
         
         API.sharedInstance().getNames() {
             response in
-            print(response)
         }
     }
     
