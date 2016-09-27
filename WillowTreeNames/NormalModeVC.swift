@@ -119,6 +119,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     self!.activityIndicator!.frame = self!.view.bounds
                     self!.activityIndicator!.startAnimating()
                     
+                    self!.questionLabel.text = "Loading..."
                     self!.loadPhotos(HelperMethods.sharedInstance().getSixRandomValues())
                 })
                 alert.addAction(OKAction)

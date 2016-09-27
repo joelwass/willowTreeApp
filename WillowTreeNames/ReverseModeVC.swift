@@ -14,6 +14,7 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     private var names = [String]()
     private var correctIndex:Int?
     private let reuseIdentifier = "NameCell"
+    @IBOutlet weak var questionLabel: UILabel!
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var faceImageView: UIImageView!
@@ -69,6 +70,7 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
                 }
                 
                 if (i == randomNums.count - 1) {
+                    self?.questionLabel.text = "Who is this?"
                     self?.activityIndicator!.removeFromSuperview()
                     self?.tableView.reloadData()
                 }
@@ -111,6 +113,7 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
                     self!.view.addSubview(self!.activityIndicator!)
                     self!.activityIndicator!.frame = self!.view.bounds
                     self!.activityIndicator!.startAnimating()
+                    self!.questionLabel.text = "Loading..."
                     
                     self!.loadNames(HelperMethods.sharedInstance().getSixRandomValues())
                 })
