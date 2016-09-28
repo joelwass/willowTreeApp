@@ -35,6 +35,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
+        // add custom loading animation view called dimview
         self.dimView = DimView(frame: CGRectMake(0,0,self.view.frame.width,self.view.frame.height))
         self.view.addSubview(dimView!)
         self.view.bringSubviewToFront(dimView!)
@@ -42,6 +43,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         self.loadPhotos(HelperMethods.sharedInstance().getSixRandomValues())
     }
     
+    // method that loads all of the photos into an array of photos given random indexes
     func loadPhotos(randomNums: [Int]) {
         
         self.photos.removeAll()
@@ -49,7 +51,6 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         dispatch_async(dispatch_get_main_queue(), { [weak self] in
             for i in Range(0..<randomNums.count) {
-            // dispatch async so we can animate each as they load
             
                 if let url = NSURL(string: API.sharedInstance().returnedData![randomNums[i]]["url"].string!) {
                     if let data = NSData(contentsOfURL: url) {
@@ -63,9 +64,9 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 }
                 
                 if (i == randomNums.count - 1) {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self!.dimView?.removeFromSuperview()
-                    })
+                    
+                    // remove dimView from super view and reload the table with the new loaded images
+                    self!.dimView?.removeFromSuperview()
                     self?.collectionView.reloadData()
                 }
             }
@@ -84,10 +85,11 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoCell
         cell.backgroundColor = UIColor.clearColor()
         
+        // set the image of the collection cell
         if photos.indices.contains(indexPath.row) {
             cell.imageView.image = photos[indexPath.row]
         }
-        // Configure the cell
+
         return cell
     }
     

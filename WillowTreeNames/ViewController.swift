@@ -38,12 +38,14 @@ class ViewController: UIViewController {
         self.reverseModeButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         self.reverseModeButton.alpha = 0.0
         
+        // load logo image
         if let url = NSURL(string: "http://www.codingacrossamerica.com/img/130312-willowtree-apps/willowtree-apps-logo.png") {
             if let data = NSData(contentsOfURL: url) {
                 logoImageView.image = UIImage(data: data)
             }        
         }
         
+        // get all of the data from the api and load it for future reference
         API.sharedInstance().getNames() {
             response in
         }
@@ -52,6 +54,7 @@ class ViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         
+        // hide navigation bar on splash page
         self.navigationController?.navigationBarHidden = true
     }
     
@@ -83,10 +86,12 @@ class ViewController: UIViewController {
     }
     
     @IBAction func viewStatsPressed(sender: AnyObject) {
-        
+        let statsVC = self.storyboard?.instantiateViewControllerWithIdentifier("StatsVC") as! StatsVC
+        self.navigationController?.pushViewController(statsVC, animated: true)
     }
 }
 
+// ui color extension for hex value inputs
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")

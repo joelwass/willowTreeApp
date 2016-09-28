@@ -16,6 +16,7 @@ class HelperMethods: NSObject {
         return singleton
     }
     
+    // gets six random index values
     func getSixRandomValues() -> [Int] {
         
         var nums = Array(0...API.sharedInstance().returnedData!.count-1)

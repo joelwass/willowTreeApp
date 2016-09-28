@@ -25,6 +25,7 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
+        // some custom ui work - nothing fancy
         self.view.backgroundColor = UIColor.init(hex:0x71B4BA)
         self.tableView.layer.cornerRadius = 8
         self.faceImageView.layer.cornerRadius = 8
@@ -40,6 +41,7 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
+        // add custom loading view called dimview
         self.dimView = DimView(frame: CGRectMake(0,0,self.view.frame.width,self.view.frame.height))
         self.view.addSubview(dimView!)
         self.view.bringSubviewToFront(dimView!)
@@ -47,6 +49,7 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         self.loadNames(HelperMethods.sharedInstance().getSixRandomValues())
     }
     
+    // load names and photo for question
     func loadNames(randomNums: [Int]) {
         
         self.names.removeAll()
@@ -54,7 +57,6 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         dispatch_async(dispatch_get_main_queue(), { [weak self] in
             for i in Range(0..<randomNums.count) {
-                // dispatch async so we can animate each as they load
                 
                 if let name = API.sharedInstance().returnedData![randomNums[i]]["name"].string {
                     self?.names.append(name)
@@ -69,10 +71,10 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
                 }
                 
                 if (i == randomNums.count - 1) {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self!.dimView?.removeFromSuperview()
-                        self!.questionLabel.text = "Who is this?"
-                    })
+                    
+                    // remove dimview, set question label, and reload table data
+                    self!.dimView?.removeFromSuperview()
+                    self!.questionLabel.text = "Who is this?"
                     self?.tableView.reloadData()
                 }
             }
