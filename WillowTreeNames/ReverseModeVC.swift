@@ -10,7 +10,7 @@ import UIKit
 
 class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    private var activityIndicator:UIActivityIndicatorView?
+    private var dimView:DimView?
     private var names = [String]()
     private var correctIndex:Int?
     private let reuseIdentifier = "NameCell"
@@ -40,10 +40,9 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
-        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-        self.view.addSubview(activityIndicator!)
-        activityIndicator!.frame = self.view.bounds
-        activityIndicator!.startAnimating()
+        self.dimView = DimView(frame: CGRectMake(0,0,self.view.frame.width,self.view.frame.height))
+        self.view.addSubview(dimView!)
+        self.view.bringSubviewToFront(dimView!)
         
         self.loadNames(HelperMethods.sharedInstance().getSixRandomValues())
     }
@@ -70,8 +69,10 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
                 }
                 
                 if (i == randomNums.count - 1) {
-                    self?.questionLabel.text = "Who is this?"
-                    self?.activityIndicator!.removeFromSuperview()
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self!.dimView?.removeFromSuperview()
+                        self!.questionLabel.text = "Who is this?"
+                    })
                     self?.tableView.reloadData()
                 }
             }
@@ -106,13 +107,14 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)  {
         
         if (indexPath.row == correctIndex) {
+            GlobalStats.SharedInstance.RightGuesses += 1
+            
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
                 let alert = UIAlertController(title: "Correct!", message: "", preferredStyle: .Alert)
                 let OKAction = UIAlertAction(title: "Next Employee", style: .Default, handler: { _ in
-                    self!.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-                    self!.view.addSubview(self!.activityIndicator!)
-                    self!.activityIndicator!.frame = self!.view.bounds
-                    self!.activityIndicator!.startAnimating()
+                    self?.dimView = DimView(frame: CGRectMake(0,0,self!.view.frame.width,self!.view.frame.height))
+                    self?.view.addSubview(self!.dimView!)
+                    self?.view.bringSubviewToFront(self!.dimView!)
                     self!.questionLabel.text = "Loading..."
                     
                     self!.loadNames(HelperMethods.sharedInstance().getSixRandomValues())
@@ -121,6 +123,8 @@ class ReverseModeVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
                 self?.presentViewController(alert, animated: true, completion: nil)
                 })
         } else {
+            GlobalStats.SharedInstance.WrongGuesses += 1
+            
             let cell = self.tableView.cellForRowAtIndexPath(indexPath)
             cell?.contentView.backgroundColor = UIColor.redColor()
             let animationDuration = 0.5

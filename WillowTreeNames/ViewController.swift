@@ -82,6 +82,9 @@ class ViewController: UIViewController {
         self.navigationController?.pushViewController(reverseModeVC, animated: true)
     }
     
+    @IBAction func viewStatsPressed(sender: AnyObject) {
+        
+    }
 }
 
 extension UIColor {

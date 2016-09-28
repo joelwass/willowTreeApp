@@ -15,7 +15,7 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     private let reuseIdentifier = "PhotoCell"
     private let sectionInsets = UIEdgeInsets(top: -50.0, left: 10.0, bottom: 10.0, right: 10.0)
     private var photos = [UIImage]()
-    private var activityIndicator:UIActivityIndicatorView?
+    private var dimView:DimView?
     private var correctIndex:Int?
     
     override func viewDidLoad() {
@@ -35,10 +35,9 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
-        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-        self.view.addSubview(activityIndicator!)
-        activityIndicator!.frame = self.view.bounds
-        activityIndicator!.startAnimating()
+        self.dimView = DimView(frame: CGRectMake(0,0,self.view.frame.width,self.view.frame.height))
+        self.view.addSubview(dimView!)
+        self.view.bringSubviewToFront(dimView!)
         
         self.loadPhotos(HelperMethods.sharedInstance().getSixRandomValues())
     }
@@ -64,7 +63,9 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 }
                 
                 if (i == randomNums.count - 1) {
-                    self?.activityIndicator!.removeFromSuperview()
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self!.dimView?.removeFromSuperview()
+                    })
                     self?.collectionView.reloadData()
                 }
             }
@@ -111,21 +112,24 @@ class NormalModeVC: UIViewController, UICollectionViewDelegate, UICollectionView
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         
         if (indexPath.row == correctIndex) {
+            GlobalStats.SharedInstance.RightGuesses += 1
+            
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
                 let alert = UIAlertController(title: "Correct!", message: "", preferredStyle: .Alert)
                 let OKAction = UIAlertAction(title: "Next Employee", style: .Default, handler: { _ in
-                    self!.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-                    self!.view.addSubview(self!.activityIndicator!)
-                    self!.activityIndicator!.frame = self!.view.bounds
-                    self!.activityIndicator!.startAnimating()
+                    self?.dimView = DimView(frame: CGRectMake(0,0,self!.view.frame.width,self!.view.frame.height))
+                    self?.view.addSubview(self!.dimView!)
+                    self?.view.bringSubviewToFront(self!.dimView!)
                     
-                    self!.questionLabel.text = "Loading..."
-                    self!.loadPhotos(HelperMethods.sharedInstance().getSixRandomValues())
+                    self?.questionLabel.text = "Loading..."
+                    self?.loadPhotos(HelperMethods.sharedInstance().getSixRandomValues())
                 })
                 alert.addAction(OKAction)
                 self?.presentViewController(alert, animated: true, completion: nil)
             })
         } else {
+            GlobalStats.SharedInstance.WrongGuesses += 1
+            
             let cell = self.collectionView.cellForItemAtIndexPath(indexPath)
             cell?.backgroundColor = UIColor.redColor()
             let animationDuration = 0.5
